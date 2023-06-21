@@ -6,11 +6,11 @@
   "license": "MIT",
   "scripts": {},
   "dependencies": {
-    "@prisma/client": "3.7.0"
+    "@prisma/client": "4.16.0"
   },
   "devDependencies": {
     "@types/node": "16.11.7",
-    "prisma": "3.7.0",
+    "prisma": "4.16.0",
     "prisma-generator-nestjs-crud": "1.0.0",
     "typescript": "4.5.2"
   }

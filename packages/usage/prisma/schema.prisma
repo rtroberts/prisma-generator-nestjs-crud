@@ -7,28 +7,17 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-}
-
-enum NotificationType {
-  newPosts
-  newComments
-  newFollowers
-  reply
-  heartOnPost
-  heartOnComment
-  heartOnReply
-}
-
-enum Language {
-  Typescript
-  Javascript
-  Rust
-  Go
-  Python
-  Cpp
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model dyo_bom {
+  dyo_bom_id   Int       @id(map: "dyo_bom_pk") @default(autoincrement()) @db.SmallInt
+  bom          Json?     @default("{}") @db.Json
+  thickness    Decimal?  @db.Decimal
+  width        Decimal?  @db.Decimal
+  length       Decimal?  @db.Decimal
+  customer     String?   @db.VarChar
+  isactive     Boolean?  @default(true)
+  notes        String?   @db.VarChar
+  date_updated DateTime? @default(dbgenerated("(now())::timestamp without time zone")) @db.Timestamp(0)
+  species      String?   @db.VarChar
+  category     Json?     @default("{}") @db.Json
 }

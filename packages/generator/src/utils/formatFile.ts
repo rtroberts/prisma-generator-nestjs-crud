@@ -1,22 +1,17 @@
-import prettier from 'prettier'
+import prettier from "prettier";
 
-export const formatFile = (content: string): Promise<string> => {
-  return new Promise((res, rej) =>
-    prettier.resolveConfig(process.cwd()).then((options) => {
-      if (!options) {
-        res(content) // no prettier config was found, no need to format
-      }
+export const formatFile = async (content: string, writeLocation: string) => {
+  try {
+    const prettierConfig = await prettier.resolveConfig(writeLocation);
 
-      try {
-        const formatted = prettier.format(content, {
-          ...options,
-          parser: 'typescript',
-        })
+    const formatted = prettier.format(content, {
+      ...prettierConfig,
+      parser: "typescript",
+    });
 
-        res(formatted)
-      } catch (error) {
-        rej(error)
-      }
-    })
-  )
-}
+    return formatted;
+  } catch (e) {
+    console.log(e);
+  }
+  return content;
+};
