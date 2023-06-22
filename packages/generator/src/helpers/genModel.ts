@@ -4,14 +4,13 @@ import type ts from "typescript";
 
 export const genModel = (model: DMMF.Model) => {
   // TODO: Handle more uniqueness scenarios. At least handling a singular unique index/constraint should be okay.
-  const pks = model.fields.filter((f) => f.isId);
+  const pk = model.fields.find((f) => f.isId);
 
-  if (pks.length != 1) {
+  if (!pk) {
     // skip this scenario for now.
     return [null, null];
   }
 
-  let pk = pks[0];
   const pkName = pk.name;
   const pkType = scalarToTS(pk.type);
   console.log(pkType);
@@ -19,6 +18,8 @@ export const genModel = (model: DMMF.Model) => {
   const modelName = model.name;
   const modelPascalCase = pascalCase(modelName);
   const modelSnakeCase = snakeCase(modelName);
+  const maybeIntPipe = pkType === "number" ? ", ParseIntPipe" : "";
+
   return [
     modelSnakeCase,
     `
@@ -102,12 +103,12 @@ export class ${modelPascalCase}Controller {
   }
 
   @Get(':id')
-  getOne(@Param('id') id: ${pkType}) {
+  getOne(@Param('id' ${maybeIntPipe}) id: ${pkType}) {
     return this.svc.getOne(id);
   }
 
   @Delete(':id')
-  deleteOne(@Param('id') id: ${pkType}) {
+  deleteOne(@Param('id' ${maybeIntPipe}) id: ${pkType}) {
     return this.svc.deleteOne(id);
   }
 
@@ -117,12 +118,12 @@ export class ${modelPascalCase}Controller {
   }
 
   @Post(':id')
-  updateOne(@Param('id') id, @Body() updatedEntry: any) {
+  updateOne(@Param('id' ${maybeIntPipe}) id, @Body() updatedEntry: any) {
     return this.svc.updateOne(id, updatedEntry);
   }
 
   @Patch(':id')
-  updateOnePatch(@Param('id') id, @Body() updatedEntry: any) {
+  updateOnePatch(@Param('id' ${maybeIntPipe}) id, @Body() updatedEntry: any) {
     return this.svc.updateOne(id, updatedEntry);
   }
 }
