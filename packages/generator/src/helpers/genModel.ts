@@ -24,29 +24,29 @@ export const genModel = (model: DMMF.Model) => {
     `
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, ${modelName} } from '@prisma/client';
 
 @Injectable()
 export class ${modelPascalCase}Service {
-  constructor() { }
+  constructor(private readonly prisma: PrismaService) { }
 
-  async getAll() {
+  async getAll(): Promise<${modelName}[]>  {
     return await this.prisma.${modelName}.findMany();
   }
 
-  async getOne(id: ${pkType}) {
+  async getOne(id: ${pkType}): Promise<${modelName}> {
     return await this.prisma.${modelName}.findUnique({
       where: { ${pkName}: id }
 });
   }
 
-  async deleteOne(id: ${pkType}) {
+  async deleteOne(id: ${pkType}): Promise<${modelName}> {
     return await this.prisma.${modelName}.delete({
       where: { ${pkName}: id }
 });
   }
 
-  async updateOne(id: ${pkType}, data: ${modelName}) {
+  async updateOne(id: ${pkType}, data: ${modelName}): Promise<${modelName}> {
     return await this.prisma.${modelName}.upsert({
       create: data,
       update: data,
@@ -54,7 +54,7 @@ export class ${modelPascalCase}Service {
     });
   }
 
-  async createOne(data: ${modelName}): ${modelName} {
+  async createOne(data: ${modelName}): Promise<${modelName}> {
     return await this.prisma.${modelName}.create({
       data: data
     });
@@ -90,7 +90,6 @@ import {
 } from '@nestjs/common';
 import { ${modelPascalCase}Service } from './${modelSnakeCase}.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 
 @Controller('${modelSnakeCase}')
 @ApiTags('${modelPascalCase}')
@@ -127,7 +126,6 @@ export class ${modelPascalCase}Controller {
     return this.svc.updateOne(id, updatedEntry);
   }
 }
-
 `,
   ];
 };
