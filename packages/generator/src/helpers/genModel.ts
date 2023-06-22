@@ -13,7 +13,6 @@ export const genModel = (model: DMMF.Model) => {
 
   const pkName = pk.name;
   const pkType = scalarToTS(pk.type);
-  console.log(pkType);
 
   const modelName = model.name;
   const modelPascalCase = pascalCase(modelName);
@@ -90,7 +89,10 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { ${modelPascalCase}Service } from './${modelSnakeCase}.service';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiBody } from '@nestjs/swagger';
+import { ${modelName} } from '@prisma/client';
+
+class PostBody implements Partial<${modelName}> {} // temporary until DTOs are generated
 
 @Controller('${modelSnakeCase}')
 @ApiTags('${modelPascalCase}')
@@ -113,18 +115,18 @@ export class ${modelPascalCase}Controller {
   }
 
   @Post('')
-  createOne(@Body() newEntry) {
-    return this.svc.createOne(newEntry);
+  createOne(@Body() newEntry: PostBody) {
+    return this.svc.createOne(newEntry as any);
   }
 
   @Post(':id')
-  updateOne(@Param('id' ${maybeIntPipe}) id, @Body() updatedEntry: any) {
-    return this.svc.updateOne(id, updatedEntry);
+  updateOne(@Param('id' ${maybeIntPipe}) id: ${pkType}, @Body() updatedEntry: PostBody) {
+    return this.svc.updateOne(id, updatedEntry as any);
   }
 
   @Patch(':id')
-  updateOnePatch(@Param('id' ${maybeIntPipe}) id, @Body() updatedEntry: any) {
-    return this.svc.updateOne(id, updatedEntry);
+  updateOnePatch(@Param('id' ${maybeIntPipe}) id: ${pkType}, @Body() updatedEntry: PostBody) {
+    return this.svc.updateOne(id, updatedEntry as any);
   }
 }
 `,

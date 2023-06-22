@@ -70,10 +70,9 @@ function rewriteAppModule(moduleName: string, dir: string, opts: prettier.Option
   imports.add(`${pascalCase(moduleName)}Module`);
 
   let updated = original.replace(importsRegex, `imports: [${[...imports].join(", ")}],`);
-  updated = `import { ${pascalCase(moduleName)}Module } from './${moduleName}/${moduleName}.module';
-${updated}`;
+  //updated = `import { ${pascalCase(moduleName)}Module } from './${moduleName}/${moduleName}.module';
+  //${updated}`;
 
-  console.log(updated);
   writeFile(dir, updated, opts);
 }
 
