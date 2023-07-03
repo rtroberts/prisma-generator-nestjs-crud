@@ -30,7 +30,7 @@
     "@types/prettier": "2.7.3",
     "prisma": "4.16.1",
     "jest": "29.5.0",
-    "ts-jest": "27.1.4",
+    "ts-jest": "29.1.1",
     "typescript": "5.1.6"
   },
   "homepage": "Link to homepage or github readme here",
