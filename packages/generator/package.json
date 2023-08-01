@@ -25,7 +25,7 @@
     "prettier": "^2.8.8"
   },
   "devDependencies": {
-    "@types/jest": "29.5.2",
+    "@types/jest": "29.5.3",
     "@types/node": "20.3.2",
     "@types/prettier": "2.7.3",
     "prisma": "4.16.1",
